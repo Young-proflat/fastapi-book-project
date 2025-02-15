@@ -1,4 +1,4 @@
- Deploy to server
+# Deploy to server
       - name: Deploy to Server
         uses: appleboy/ssh-action@v1.0.3
         with:
