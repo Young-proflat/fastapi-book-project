@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 name: Deploy to Server
 
+=======
+name: Deploy
+>>>>>>> 231bfa05752e8228c7a674dd1075d544cdda3053
 on:
   push:
     branches:
@@ -26,6 +30,7 @@ jobs:
             mkdir -p young-proflat-fastapi-stage12-task
             cd young-proflat-fastapi-stage12-task
             
+<<<<<<< HEAD
             # Clone the repository only if it doesn't exist
             if [ ! -d ".git" ]; then
               git clone https://github.com/Young-proflat/fastapi-book-project.git .
@@ -33,6 +38,12 @@ jobs:
             
             # Pull latest changes
             echo "Pulling latest changes..."
+=======
+            # Clone the repository (or pull updates)
+            if [ ! -d ".git" ]; then
+              git clone https://github.com/Young-proflat/fastapi-book-project.git .
+            fi
+>>>>>>> 231bfa05752e8228c7a674dd1075d544cdda3053
             git fetch --all
             git reset --hard origin/main
             git pull origin main
@@ -43,11 +54,16 @@ jobs:
             source venv/bin/activate || exit 1
             
             # Install FastAPI and dependencies
+<<<<<<< HEAD
             echo "Installing dependencies..."
             pip install --upgrade pip || exit 1
             pip install fastapi || exit 1
             pip install -r requirements.txt || exit 1
             echo "Dependencies installed successfully"
+=======
+            pip install --upgrade pip || exit 1
+            pip install -r requirements.txt || exit 1
+>>>>>>> 231bfa05752e8228c7a674dd1075d544cdda3053
             
             # Stop existing application if running
             echo "Stopping existing application..."
