@@ -1,75 +1,44 @@
-<<<<<<< HEAD
-name: Deploy to Server
+# Deploy to server
+- name: Deploy to Server
+  uses: appleboy/ssh-action@v1.0.3
+  with:
+    host: ${{secrets.SERVER_HOST}}
+    key: ${{secrets.SERVER_SSH_KEY}}
+    username: ${{secrets.SERVER_USERNAME}}
+    script: |
+      echo “Starting deployment...”
 
-=======
-name: Deploy
->>>>>>> 231bfa05752e8228c7a674dd1075d544cdda3053
-on:
-  push:
-    branches:
-      - main
+      # Create and navigate to project directory
+      mkdir -p young-proflat-fastapi-stage12-task
+      cd young-proflat-fastapi-stage12-task
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+      # Clone the repository into the project directory
+      git clone https://github.com/Young-proflat/fastapi-book-project.git .
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      # Pull latest changes
+      echo “Pulling latest changes...”
+      git fetch --all
+      git pull origin main
 
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          script: |
-            echo "Starting deployment..."
-            
-            # Create and navigate to project directory
-            mkdir -p young-proflat-fastapi-stage12-task
-            cd young-proflat-fastapi-stage12-task
-            
-<<<<<<< HEAD
-            # Clone the repository only if it doesn't exist
-            if [ ! -d ".git" ]; then
-              git clone https://github.com/Young-proflat/fastapi-book-project.git .
-            fi
-            
-            # Pull latest changes
-            echo "Pulling latest changes..."
-=======
-            # Clone the repository (or pull updates)
-            if [ ! -d ".git" ]; then
-              git clone https://github.com/Young-proflat/fastapi-book-project.git .
-            fi
->>>>>>> 231bfa05752e8228c7a674dd1075d544cdda3053
-            git fetch --all
-            git reset --hard origin/main
-            git pull origin main
-            
-            # Setup virtual environment
-            echo "Setting up virtual environment..."
-            python3 -m venv venv || exit 1
-            source venv/bin/activate || exit 1
-            
-            # Install FastAPI and dependencies
-<<<<<<< HEAD
-            echo "Installing dependencies..."
-            pip install --upgrade pip || exit 1
-            pip install fastapi || exit 1
-            pip install -r requirements.txt || exit 1
-            echo "Dependencies installed successfully"
-=======
-            pip install --upgrade pip || exit 1
-            pip install -r requirements.txt || exit 1
->>>>>>> 231bfa05752e8228c7a674dd1075d544cdda3053
-            
-            # Stop existing application if running
-            echo "Stopping existing application..."
-            pkill -f "uvicorn main:app" || echo "No existing process found"
-            
-            # Start application
-            echo "Starting application..."
-            nohup uvicorn main:app --host 0.0.0.0 --port 8000 > app.log 2>&1 &
-            echo "Application started successfully"
+      # Setup virtual environment
+      echo “Setting up virtual environment...”
+      python3 -m venv venv || exit 1
+      source venv/bin/activate || exit 1
+
+      #Install fastapi
+      pip install fastapi || exit 1
+      echo “FastAPI installed successfully”
+
+      # Install dependencies
+      echo “Installing dependencies...”
+      pip install -r requirements.txt || exit 1
+
+      # Stop existing application if running
+      echo “Stopping existing application...”
+      killall uvicorn || echo “No existing process found”
+      echo “Application stopped successfully”
+
+      # Start application
+      echo “Starting application...”
+      nohup uvicorn main:app --host 0.0.0.0 --port 8000 > app.log 2>&1 &
+      echo “Application started successfully”
